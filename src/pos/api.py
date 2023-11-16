@@ -42,6 +42,9 @@ class Tagger:
         # Þetta mun klikka þegar það á að búa til transformer
         self.model: EncodersDecoders = build_model(kwargs=kwargs, dicts=dicts)
         self.model.load_state_dict(torch.load(model_path / "model.pt", map_location=core.device))
+        # For updated transformer > 4.30.X we need to do this as a quick fix, it might be better to implement
+        # explicit handling of the state dict in the future.
+        #self.model.load_state_dict(torch.load(model_path / "model.pt", map_location=core.device), strict=False)
 
     def _infer(self, ds: FieldedDataset, batch_size=16) -> FieldedDataset:
         # If we have a BERT model, we need to chunk
